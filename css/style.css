@@ -1,0 +1,104 @@
+*{
+    margin: 0 ;
+    padding: 0 ;
+    box-sizing: border-box;
+/*    overflow: hidden;*/
+/*
+    outline: solid #f00 1px !important;
+    background: #000 !important;
+    color: #fff !important;*/
+}
+
+.page{
+    width: 10rem;
+    height: 100vh;
+    position: fixed; /*位置固定*/
+    left: 0 ;   /*位置固定为左上角*/
+    top:0 ;
+    overflow: hidden; /*溢出隐藏*/
+    background: purple ; /*背景颜色*/
+}
+
+.startGame{
+    z-index: 10; /*堆叠顺序*/
+    display: flex;/*将对象作为弹性伸缩盒显示*/
+    justify-content:center ; /*子盒子排布的方式，*/
+    align-items:center ;/*子盒子排布的方式，*/
+}
+.startGame .startBtn{
+    width: 4rem;
+    height: 1.2rem;
+    font-size: 0.6rem;
+    line-height:0.6rem;
+    border:none ;
+    background: deepskyblue;
+    border-radius: 0.5rem;
+    color: #FFFFFF;
+    box-shadow: 0 3px 10px #999;
+}
+.gaming{
+    background: darkblue;
+    padding:  0.4rem; /*边距*/
+}
+.gaming .quiz {
+    font-size: 0.5rem;
+    color: #FFFFFF;
+    margin: 1rem 0rem; /*上下边距为1rem ,左右为0*/
+}
+
+.gaming .main{
+    font-size: 0.5rem;
+    color: #FFFFFF;
+    margin: 1rem 0;  /*上下外边距为1rem ,左右为0*/
+    background: rgba(0,0,0,0.6); /**/
+    padding: 0.4rem; /*内边距(上下左右边距)为 0.4rem*/
+    border-radius: 0.5rem ; /*圆角*/
+
+}
+
+.gaming .main .optionItem{
+    padding: 0.2rem ;
+    border-radius: 0.3rem;
+    margin: 0.1rem 0rem;
+}
+
+.endGame{
+    padding:  0.4rem; /*边距*/
+    display: flex;/*将对象作为弹性伸缩盒显示*/
+    justify-content:center ; /*子盒子排布的方式，*/
+    align-items:center ;/*子盒子排布的方式，*/
+    flex-direction: column;
+}
+.endGame h2{
+    color: #FFFFFF;
+    font-size: 0.5rem;
+    margin: 1rem 0rem; /*上下边距为1rem ,左右为0*/
+}
+.endGame h3{
+    color: #FFFFFF;
+    font-size: 0.4rem;
+    margin: 1rem 0rem; /*上下边距为1rem ,左右为0*/
+}
+
+.endGame .reStart {
+    width: 4rem;
+    height: 1.2rem;
+    font-size: 0.6rem;
+    line-height:0.6rem;
+    border:none ;
+    background: #19ff6a;
+    border-radius: 0.5rem;
+    color: #FFFFFF;
+    box-shadow: 0 3px 10px #999;
+}
+
+.gaming .clock{
+    width: 1rem;
+    height: 1rem;
+    font-size: 0.6rem;
+    background: mistyrose;
+    border-radius: 0.5rem;
+    text-align: center;
+    line-height: 1rem;
+    margin: 1rem auto; /*上下外边距1rem 左右 auto 为居中*/
+}

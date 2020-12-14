@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>百万答题</title>
+    <script type="text/javascript"  src="./js/rem.js"></script>
+    <script type="text/javascript"  src="./js/axios.js"></script>
+    <script type="text/javascript"  src="./js/jquery.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+</head>
+<body>
+    <div class = "page startGame">
+        <button class ="startBtn">开始答题</button>
+    </div>
+    <div class="page gaming">
+        <div class = "clock">10</div>
+        <h1 class = "quiz"></h1>
+        <div class="main"></div>
+    </div>
+    <div class="page endGame">
+        <h2>恭喜你答对了<span class="num"></span> 题</h2>
+        <h3>历史最高连续答题数:<span class="num"></span></h3>
+        <button class="reStart">重新开始</button>
+    </div>
+</body>
+<script type="text/javascript">
+    var startBtn = document.querySelector('.startBtn') ;
+    var startPage = document.querySelector('.startGame') ;
+    var gamingPage = document.querySelector('.gaming') ;
+    var endPage = document .querySelector('.endGame') ;
+    var main = document.querySelector('.main') ;
+    var h1 = document.querySelector('.quiz') ;
+    var reStratBtn = document.querySelector('.reStart') ;
+    var questionList = [] ;
+    var currentQuestion = null ;
+    var aaa = null ;
+    var clock = 10 ; //倒计时默认为10s
+    //记录答题数量
+    var score = 0 ;
+    var clockInterval = null;
+
+
+    //渲染一道问题
+    function renderQuesttion(questionList){
+        var randomNum = parseInt(Math.random()*questionList.length)
+        console.log(randomNum) ;
+        var del = questionList.splice(randomNum,1) ;
+        currentQuestion = del[0] ;
+        console.log(currentQuestion) ;
+        main.innerHTML = "" ; //每次初始化都清空之前的内容
+        h1.innerHTML = currentQuestion.quiz ;  //渲染标题
+
+        currentQuestion.options.forEach(function (item,index) {
+           var newDiv = document.createElement('div') ;
+            newDiv.className = "optionItem" ;
+            newDiv.dataset.index = index +1 ;
+            newDiv.innerHTML= (index+1)+"、"+ item ;
+            main.appendChild(newDiv) ;
+        }) ;
+    }
+
+    //开始倒计时
+    function startClock (){
+        var raise =  clock ;
+        var clockDom = document.querySelector('.clock') ;
+        clockInterval = setInterval(function () {
+            clockDom.innerHTML = raise ;
+            if(raise == 0 ){
+                clearInterval(clockInterval) ; //清除定时器
+                endGame() ;
+            }
+            raise -- ;
+
+        },1000);
+    }
+    //进入下个答题
+    function nextQuestion(){
+       // gamingPage.style.zIndex = 100 ; //几个层叠加覆盖，zindex越大越在上面
+        intoPage("gamingPage") ;
+        renderQuesttion(questionList) ;
+        startClock () ;
+
+    }
+    //答题结束
+    function endGame(){
+            intoPage("endPage") ;
+         //   endPage.style.zIndex = 100 ;
+            var scoreDom = document.querySelector('.num') ;
+            var scoreMaxDom = document.querySelector(".maxNum") ;
+            scoreDom.innerHTML = score ;
+            if(localStorage.datiMaxScore){
+                scoreMaxDom.innerHTML = localStorage.datiMaxScore;
+            }else{
+                scoreMaxDom.innerHTML = score ;
+                localStorage.datiMaxScore = score ;
+            }
+        //初始化显示顺序
+        endPage.style.zIndex = 1 ;
+        gamingPage.style.zIndex = 0;
+        startPage.style.zIndex = 0 ;
+    }
+
+    startBtn.onclick = function () {
+        gamingPage.style.zIndex = 100 ; //几个层叠加覆盖，zindex越大越在上面
+    //    endPage.style.zIndex = 10000 ; //几个层叠加覆盖，zindex越大越在上面
+
+        $.ajax({url:"data.json",async:true,success:function(result){
+                questionList = result;
+                console.log(questionList) ;
+                renderQuesttion(questionList) ;
+                startClock () ;
+            }});
+
+    }
+
+    main.addEventListener('click',function (e) {
+        console.log(e) ;
+        if(e.target.className == "optionItem"){
+           var index = e.target.dataset.index ;
+           //判断当前选中题目是否是正确的
+            if(currentQuestion.answer == index){
+                score++ ;
+                e.target.style.backgroundColor = "yellowgreen" ;
+                clearInterval(clockInterval) ;
+                setTimeout(function () {
+                    nextQuestion() ;
+                },2000) ;
+            }else{
+                e.target.style.backgroundColor = "deeppink" ;
+                var currAnswerDom = document.querySelector('.optionItem:nth-child('+currentQuestion.answer+')') ;
+                currAnswerDom.style.backgroundColor = "yellowgreen" ;
+                clearInterval(clockInterval) ;
+                setTimeout(function () {
+                    endGame();
+                },2000) ;
+            }
+        }
+    });
+
+    reStratBtn.addEventListener('click',function (e) {
+        intoPage("startPage") ;
+        window.location.reload();
+      //  alert("aa")
+    });
+
+    function intoPage(page){
+        if(page == "startPage"){
+            startPage.style.zIndex = 100 ;
+            endPage.style.zIndex = 0 ;
+            gamingPage.style.zIndex = 0;
+        }else if(page == "gamingPage")
+        {
+            startPage.style.zIndex = 0 ;
+            endPage.style.zIndex = 0 ;
+            gamingPage.style.zIndex = 100;
+        }else {
+            startPage.style.zIndex = 0 ;
+            endPage.style.zIndex = 100 ;
+            gamingPage.style.zIndex = 0;
+        }
+
+    }
+
+</script>
+</html>
